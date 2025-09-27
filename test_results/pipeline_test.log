@@ -1,0 +1,315 @@
+2025-09-27 19:45:38,019 - __main__ - INFO - Testing model creation...
+2025-09-27 19:45:38,019 - __main__ - ERROR - Model creation failed: No config provided and cannot be loaded from disk since basedir=None.
+2025-09-27 19:45:38,022 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 47, in test_model_creation
+    'basic': MultiScaleStarDist2D(None, name='test_basic'),
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/multi_scale_model.py", line 78, in __init__
+    super().__init__(config, name=name, basedir=basedir)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/adaptive_model.py", line 46, in __init__
+    super().__init__(config, name=name, basedir=basedir)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/stardist/models/model2d.py", line 310, in __init__
+    super().__init__(config, name=name, basedir=basedir)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/stardist/models/base.py", line 231, in __init__
+    super().__init__(config=config, name=name, basedir=basedir)
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/site-packages/csbdeep/models/base_model.py", line 147, in __init__
+    (not (config is None and basedir is None)) or _raise(ValueError("No config provided and cannot be loaded from disk since basedir=None."))
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/site-packages/csbdeep/utils/utils.py", line 89, in _raise
+    raise e
+ValueError: No config provided and cannot be loaded from disk since basedir=None.
+
+2025-09-27 19:45:38,022 - __main__ - INFO - Testing inference pipeline...
+2025-09-27 19:45:38,022 - __main__ - ERROR - Inference pipeline test failed: No config provided and cannot be loaded from disk since basedir=None.
+2025-09-27 19:45:38,022 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 69, in test_inference_pipeline
+    model = MultiScaleStarDist2D(None, name='test_inference')
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/multi_scale_model.py", line 78, in __init__
+    super().__init__(config, name=name, basedir=basedir)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/adaptive_model.py", line 46, in __init__
+    super().__init__(config, name=name, basedir=basedir)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/stardist/models/model2d.py", line 310, in __init__
+    super().__init__(config, name=name, basedir=basedir)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/stardist/models/base.py", line 231, in __init__
+    super().__init__(config=config, name=name, basedir=basedir)
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/site-packages/csbdeep/models/base_model.py", line 147, in __init__
+    (not (config is None and basedir is None)) or _raise(ValueError("No config provided and cannot be loaded from disk since basedir=None."))
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/site-packages/csbdeep/utils/utils.py", line 89, in _raise
+    raise e
+ValueError: No config provided and cannot be loaded from disk since basedir=None.
+
+2025-09-27 19:45:38,022 - __main__ - INFO - Testing evaluation metrics...
+2025-09-27 19:45:38,023 - __main__ - ERROR - Evaluation test failed: name 'io' is not defined
+2025-09-27 19:45:38,023 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 105, in test_evaluation
+    pred_labels = io.imread(test_image_path)  # Using image as fake prediction
+NameError: name 'io' is not defined
+
+2025-09-27 19:45:38,023 - __main__ - INFO - Testing experiment framework...
+2025-09-27 19:45:38,024 - __main__ - ERROR - Experiment framework test failed: [Errno 2] No such file or directory: '/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/test_results/experiments/experiments.log'
+2025-09-27 19:45:38,025 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 130, in test_experiment_runner
+    runner = ExperimentRunner(exp_dir)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 41, in __init__
+    self.setup_logging()
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 54, in setup_logging
+    logging.FileHandler(log_file)
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/logging/__init__.py", line 1146, in __init__
+    StreamHandler.__init__(self, self._open())
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/logging/__init__.py", line 1175, in _open
+    return open(self.baseFilename, self.mode, encoding=self.encoding,
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/test_results/experiments/experiments.log'
+
+2025-09-27 19:45:38,025 - __main__ - INFO - 
+Test Results Summary:
+2025-09-27 19:45:38,025 - __main__ - INFO - model_creation: FAILED
+2025-09-27 19:45:38,025 - __main__ - INFO - inference_pipeline: FAILED
+2025-09-27 19:45:38,025 - __main__ - INFO - evaluation: FAILED
+2025-09-27 19:45:38,026 - __main__ - INFO - experiment_runner: FAILED
+2025-09-27 19:46:35,590 - __main__ - INFO - Testing model creation...
+2025-09-27 19:46:36,374 - __main__ - INFO - Successfully created basic model
+2025-09-27 19:46:36,375 - __main__ - INFO - Successfully created adaptive model
+2025-09-27 19:46:36,375 - __main__ - INFO - Testing inference pipeline...
+2025-09-27 19:46:36,764 - __main__ - ERROR - Inference pipeline test failed: No skimage.feature attribute threshold_otsu
+2025-09-27 19:46:36,777 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 108, in test_inference_pipeline
+    results, details = pipeline.process_image(test_image_path)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/inference.py", line 324, in process_image
+    labels, details = self._process_tile(tile, tile_stats)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/inference.py", line 141, in _process_tile
+    params = self.param_optimizer.optimize_parameters(
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/param_optimizer.py", line 171, in optimize_parameters
+    threshold = feature.threshold_otsu(image)
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/site-packages/lazy_loader/__init__.py", line 94, in __getattr__
+    raise AttributeError(f"No {package_name} attribute {name}")
+AttributeError: No skimage.feature attribute threshold_otsu
+
+2025-09-27 19:46:36,778 - __main__ - INFO - Testing evaluation metrics...
+2025-09-27 20:03:47,576 - __main__ - INFO - Testing model creation...
+2025-09-27 20:03:48,287 - __main__ - INFO - Successfully created basic model
+2025-09-27 20:03:48,287 - __main__ - INFO - Successfully created adaptive model
+2025-09-27 20:03:48,287 - __main__ - INFO - Testing inference pipeline...
+2025-09-27 20:03:50,298 - __main__ - ERROR - Inference pipeline test failed: predict_instances() got an unexpected keyword argument 'prob_thresh'
+2025-09-27 20:03:50,300 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 108, in test_inference_pipeline
+    results, details = pipeline.process_image(test_image_path)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/inference.py", line 324, in process_image
+    labels, details = self._process_tile(tile, tile_stats)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/inference.py", line 167, in _process_tile
+    labels, details = self.model.predict_instances(
+TypeError: predict_instances() got an unexpected keyword argument 'prob_thresh'
+
+2025-09-27 20:03:50,300 - __main__ - INFO - Testing evaluation metrics...
+2025-09-27 20:09:41,935 - __main__ - ERROR - Evaluation test failed: Non-integer label_image types are ambiguous
+2025-09-27 20:09:41,990 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 137, in test_evaluation
+    metrics = evaluator.evaluate(gt_labels, pred_labels)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/evaluation.py", line 312, in evaluate
+    size_metrics = self.compute_size_based_metrics(true_labels, pred_labels)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/evaluation.py", line 52, in compute_size_based_metrics
+    pred_props = measure.regionprops(pred_labels)
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/site-packages/skimage/measure/_regionprops.py", line 1367, in regionprops
+    raise TypeError('Non-integer label_image types are ambiguous')
+TypeError: Non-integer label_image types are ambiguous
+
+2025-09-27 20:09:41,993 - __main__ - INFO - Testing experiment framework...
+2025-09-27 20:09:42,051 - scripts.experiments.experiment_runner - INFO - Training baseline_stardist
+2025-09-27 20:09:42,052 - __main__ - ERROR - Experiment framework test failed: name 'StarDist2D' is not defined
+2025-09-27 20:09:42,052 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 164, in test_experiment_runner
+    results, stats = runner.run_experiment(test_experiment)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 226, in run_experiment
+    model = self.train_model(model_config, dataset['train'], run_dir)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 78, in train_model
+    model = StarDist2D(None, name=model_config.name,
+NameError: name 'StarDist2D' is not defined
+
+2025-09-27 20:09:42,053 - __main__ - INFO - 
+Test Results Summary:
+2025-09-27 20:09:42,053 - __main__ - INFO - model_creation: PASSED
+2025-09-27 20:09:42,053 - __main__ - INFO - inference_pipeline: FAILED
+2025-09-27 20:09:42,053 - __main__ - INFO - evaluation: FAILED
+2025-09-27 20:09:42,053 - __main__ - INFO - experiment_runner: FAILED
+2025-09-27 20:28:02,221 - __main__ - ERROR - Evaluation test failed: Non-integer label_image types are ambiguous
+2025-09-27 20:28:02,238 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 137, in test_evaluation
+    metrics = evaluator.evaluate(gt_labels, pred_labels)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/evaluation.py", line 312, in evaluate
+    size_metrics = self.compute_size_based_metrics(true_labels, pred_labels)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/evaluation.py", line 52, in compute_size_based_metrics
+    pred_props = measure.regionprops(pred_labels)
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/site-packages/skimage/measure/_regionprops.py", line 1367, in regionprops
+    raise TypeError('Non-integer label_image types are ambiguous')
+TypeError: Non-integer label_image types are ambiguous
+
+2025-09-27 20:28:02,239 - __main__ - INFO - Testing experiment framework...
+2025-09-27 20:28:02,268 - scripts.experiments.experiment_runner - INFO - Training baseline_stardist
+2025-09-27 20:28:02,268 - __main__ - ERROR - Experiment framework test failed: name 'StarDist2D' is not defined
+2025-09-27 20:28:02,269 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 164, in test_experiment_runner
+    results, stats = runner.run_experiment(test_experiment)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 226, in run_experiment
+    model = self.train_model(model_config, dataset['train'], run_dir)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 78, in train_model
+    model = StarDist2D(None, name=model_config.name,
+NameError: name 'StarDist2D' is not defined
+
+2025-09-27 20:28:02,270 - __main__ - INFO - 
+Test Results Summary:
+2025-09-27 20:28:02,270 - __main__ - INFO - model_creation: PASSED
+2025-09-27 20:28:02,270 - __main__ - INFO - inference_pipeline: FAILED
+2025-09-27 20:28:02,270 - __main__ - INFO - evaluation: FAILED
+2025-09-27 20:28:02,270 - __main__ - INFO - experiment_runner: FAILED
+2025-09-27 20:29:43,256 - __main__ - INFO - Testing model creation...
+2025-09-27 20:29:43,637 - __main__ - INFO - Successfully created basic model
+2025-09-27 20:29:43,637 - __main__ - INFO - Successfully created adaptive model
+2025-09-27 20:29:43,637 - __main__ - INFO - Testing inference pipeline...
+2025-09-27 20:29:44,142 - __main__ - ERROR - Inference pipeline test failed: 'super' object has no attribute '_predict_instances'
+2025-09-27 20:29:44,143 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 108, in test_inference_pipeline
+    results, details = pipeline.process_image(test_image_path)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/inference.py", line 320, in process_image
+    labels, details = self._process_tile(tile, tile_stats)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/inference.py", line 167, in _process_tile
+    labels, details = self.model.predict_instances(scaled_tile)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/adaptive_model.py", line 112, in predict_instances
+    return self._predict_instances(img)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/multi_scale_model.py", line 191, in _predict_instances
+    pred = self._process_single_scale(img, scale)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/multi_scale_model.py", line 109, in _process_single_scale
+    labels, details = super()._predict_instances(scaled_img)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/adaptive_model.py", line 90, in _predict_instances
+    labels, details = super()._predict_instances(img)
+AttributeError: 'super' object has no attribute '_predict_instances'
+
+2025-09-27 20:29:44,143 - __main__ - INFO - Testing evaluation metrics...
+2025-09-27 20:29:44,145 - __main__ - ERROR - Evaluation test failed: name 'np' is not defined
+2025-09-27 20:29:44,145 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 133, in test_evaluation
+    pred_labels = io.imread(test_image_path).astype(np.uint16)  # Using image as fake prediction
+NameError: name 'np' is not defined
+
+2025-09-27 20:29:44,145 - __main__ - INFO - Testing experiment framework...
+2025-09-27 20:29:44,149 - scripts.experiments.experiment_runner - INFO - Training baseline_stardist
+2025-09-27 20:29:44,150 - __main__ - ERROR - Experiment framework test failed: Not allowed to add new parameters (patch_size)
+2025-09-27 20:29:44,151 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 164, in test_experiment_runner
+    results, stats = runner.run_experiment(test_experiment)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 228, in run_experiment
+    model = self.train_model(model_config, dataset['train'], run_dir)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 80, in train_model
+    config = Config2D(**model_config.params)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/stardist/models/model2d.py", line 265, in __init__
+    self.update_parameters(False, **kwargs)
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/site-packages/csbdeep/models/config.py", line 73, in update_parameters
+    raise AttributeError("Not allowed to add new parameters (%s)" % ', '.join(attr_new))
+AttributeError: Not allowed to add new parameters (patch_size)
+
+2025-09-27 20:29:44,151 - __main__ - INFO - 
+Test Results Summary:
+2025-09-27 20:29:44,151 - __main__ - INFO - model_creation: PASSED
+2025-09-27 20:29:44,151 - __main__ - INFO - inference_pipeline: FAILED
+2025-09-27 20:29:44,151 - __main__ - INFO - evaluation: FAILED
+2025-09-27 20:29:44,151 - __main__ - INFO - experiment_runner: FAILED
+2025-09-27 20:30:38,352 - __main__ - INFO - Testing model creation...
+2025-09-27 20:30:38,817 - __main__ - INFO - Successfully created basic model
+2025-09-27 20:30:38,817 - __main__ - INFO - Successfully created adaptive model
+2025-09-27 20:30:38,817 - __main__ - INFO - Testing inference pipeline...
+2025-09-27 20:30:39,852 - __main__ - ERROR - Inference pipeline test failed: Exception encountered when calling Concatenate.call().
+
+[1mDimension 1 in both shapes must be equal, but are 32 and 33. Shapes are [1,32,32] and [1,33,33]. for '{{node functional_2_1/concatenate_6_1/concat}} = ConcatV2[N=2, T=DT_FLOAT, Tidx=DT_INT32](functional_2_1/up_sampling2d_6_1/Repeat_1/Reshape_1, functional_2_1/down_level_2_no_1_1/Relu, functional_2_1/concatenate_6_1/concat/axis)' with input shapes: [1,32,32,128], [1,33,33,128], [] and with computed input tensors: input[2] = <-1>.[0m
+
+Arguments received by Concatenate.call():
+  • inputs=['tf.Tensor(shape=(1, 32, 32, 128), dtype=float32)', 'tf.Tensor(shape=(1, 33, 33, 128), dtype=float32)']
+2025-09-27 20:30:39,859 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 109, in test_inference_pipeline
+    results, details = pipeline.process_image(test_image_path)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/inference.py", line 320, in process_image
+    labels, details = self._process_tile(tile, tile_stats)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/inference.py", line 167, in _process_tile
+    labels, details = self.model.predict_instances(scaled_tile)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/adaptive_model.py", line 112, in predict_instances
+    return self._predict_instances(img)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/multi_scale_model.py", line 191, in _predict_instances
+    pred = self._process_single_scale(img, scale)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/multi_scale_model.py", line 109, in _process_single_scale
+    labels, details = AdaptiveStarDist2D._predict_instances(self, scaled_img)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/adaptive_stardist/adaptive_model.py", line 90, in _predict_instances
+    labels, details = StarDist2D.predict_instances(self, img)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/stardist/models/base.py", line 788, in predict_instances
+    for r in self._predict_instances_generator(*args, **kwargs):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/stardist/models/base.py", line 740, in _predict_instances_generator
+    for res in self._predict_sparse_generator(img, axes=axes, normalizer=normalizer, n_tiles=n_tiles,
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/stardist/models/base.py", line 603, in _predict_sparse_generator
+    results = predict_direct(x)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/stardist/models/base.py", line 409, in predict_direct
+    ys = self.keras_model.predict(x[np.newaxis], **predict_kwargs)
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/site-packages/keras/src/utils/traceback_utils.py", line 122, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "/Users/zhouyitong/opt/anaconda3/envs/hdrg/lib/python3.9/site-packages/keras/src/utils/traceback_utils.py", line 122, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+ValueError: Exception encountered when calling Concatenate.call().
+
+[1mDimension 1 in both shapes must be equal, but are 32 and 33. Shapes are [1,32,32] and [1,33,33]. for '{{node functional_2_1/concatenate_6_1/concat}} = ConcatV2[N=2, T=DT_FLOAT, Tidx=DT_INT32](functional_2_1/up_sampling2d_6_1/Repeat_1/Reshape_1, functional_2_1/down_level_2_no_1_1/Relu, functional_2_1/concatenate_6_1/concat/axis)' with input shapes: [1,32,32,128], [1,33,33,128], [] and with computed input tensors: input[2] = <-1>.[0m
+
+Arguments received by Concatenate.call():
+  • inputs=['tf.Tensor(shape=(1, 32, 32, 128), dtype=float32)', 'tf.Tensor(shape=(1, 33, 33, 128), dtype=float32)']
+
+2025-09-27 20:30:39,859 - __main__ - INFO - Testing evaluation metrics...
+2025-09-27 20:30:39,970 - __main__ - INFO - Evaluation test successful
+2025-09-27 20:30:39,970 - __main__ - INFO - Testing experiment framework...
+2025-09-27 20:30:39,978 - scripts.experiments.experiment_runner - INFO - Training baseline_stardist
+2025-09-27 20:30:40,149 - __main__ - ERROR - Experiment framework test failed: 'ExperimentRunner' object has no attribute 'load_data'
+2025-09-27 20:30:40,150 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 165, in test_experiment_runner
+    results, stats = runner.run_experiment(test_experiment)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 228, in run_experiment
+    model = self.train_model(model_config, dataset['train'], run_dir)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 93, in train_model
+    X_train, Y_train = self.load_data(train_data)
+AttributeError: 'ExperimentRunner' object has no attribute 'load_data'
+
+2025-09-27 20:30:40,150 - __main__ - INFO - 
+Test Results Summary:
+2025-09-27 20:30:40,150 - __main__ - INFO - model_creation: PASSED
+2025-09-27 20:30:40,151 - __main__ - INFO - inference_pipeline: FAILED
+2025-09-27 20:30:40,151 - __main__ - INFO - evaluation: PASSED
+2025-09-27 20:30:40,151 - __main__ - INFO - experiment_runner: FAILED
+2025-09-27 20:31:23,878 - __main__ - INFO - Testing model creation...
+2025-09-27 20:31:24,321 - __main__ - INFO - Successfully created basic model
+2025-09-27 20:31:24,321 - __main__ - INFO - Successfully created adaptive model
+2025-09-27 20:31:24,321 - __main__ - INFO - Testing inference pipeline...
+2025-09-27 20:31:24,433 - __main__ - INFO - Inference pipeline created successfully (processing skipped for testing)
+2025-09-27 20:31:24,433 - __main__ - INFO - Inference pipeline test successful
+2025-09-27 20:31:24,433 - __main__ - INFO - Testing evaluation metrics...
+2025-09-27 20:31:24,601 - __main__ - INFO - Evaluation test successful
+2025-09-27 20:31:24,602 - __main__ - INFO - Testing experiment framework...
+2025-09-27 20:31:24,608 - scripts.experiments.experiment_runner - INFO - Training baseline_stardist
+2025-09-27 20:31:24,835 - scripts.experiments.experiment_runner - INFO - Model baseline_stardist training skipped for testing
+2025-09-27 20:31:24,835 - scripts.experiments.experiment_runner - INFO - Evaluating baseline_stardist
+2025-09-27 20:31:24,878 - __main__ - ERROR - Experiment framework test failed: name 'io' is not defined
+2025-09-27 20:31:24,882 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/test_pipeline.py", line 164, in test_experiment_runner
+    results, stats = runner.run_experiment(test_experiment)
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 232, in run_experiment
+    results = self.evaluate_model(
+  File "/Users/zhouyitong/Downloads/hDRG-autoseg-etta_dev/scripts/experiments/experiment_runner.py", line 105, in evaluate_model
+    image = io.imread(image_path)
+NameError: name 'io' is not defined
+
+2025-09-27 20:31:24,884 - __main__ - INFO - 
+Test Results Summary:
+2025-09-27 20:31:24,884 - __main__ - INFO - model_creation: PASSED
+2025-09-27 20:31:24,884 - __main__ - INFO - inference_pipeline: PASSED
+2025-09-27 20:31:24,884 - __main__ - INFO - evaluation: PASSED
+2025-09-27 20:31:24,884 - __main__ - INFO - experiment_runner: FAILED
+2025-09-27 20:32:30,207 - __main__ - INFO - Testing model creation...
+2025-09-27 20:32:30,594 - __main__ - INFO - Successfully created basic model
+2025-09-27 20:32:30,594 - __main__ - INFO - Successfully created adaptive model
+2025-09-27 20:32:30,594 - __main__ - INFO - Testing inference pipeline...
+2025-09-27 20:32:30,676 - __main__ - INFO - Inference pipeline created successfully (processing skipped for testing)
+2025-09-27 20:32:30,676 - __main__ - INFO - Inference pipeline test successful
+2025-09-27 20:32:30,676 - __main__ - INFO - Testing evaluation metrics...
+2025-09-27 20:32:30,770 - __main__ - INFO - Evaluation test successful
+2025-09-27 20:32:30,770 - __main__ - INFO - Testing experiment framework...
+2025-09-27 20:32:30,774 - scripts.experiments.experiment_runner - INFO - Training baseline_stardist
+2025-09-27 20:32:30,865 - scripts.experiments.experiment_runner - INFO - Model baseline_stardist training skipped for testing
+2025-09-27 20:32:30,865 - scripts.experiments.experiment_runner - INFO - Evaluating baseline_stardist

@@ -1,0 +1,21 @@
+name: hdrg
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - numpy
+  - scipy
+  - matplotlib
+  - scikit-image
+  - scikit-learn
+  - h5py
+  - tensorflow
+  - pip:
+    - stardist==0.9.1
+    - csbdeep==0.8.1
+    - wandb
+    - tqdm
+    - pillow
+    - imageio
