@@ -1,0 +1,11 @@
+2025-09-29 06:02:00.286084: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-09-29 06:02:56.026230: I tensorflow/core/common_runtime/process_util.cc:146] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 200, in <module>
+    main()
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 171, in main
+    train_data = MultiScaleStarDistData2D(
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/adaptive_stardist/training.py", line 214, in __init__
+    super().__init__(X, Y, batch_size, **kwargs)
+TypeError: __init__() missing 1 required positional argument: 'length'

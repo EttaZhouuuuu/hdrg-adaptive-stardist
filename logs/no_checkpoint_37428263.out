@@ -1,0 +1,10 @@
+=== 无检查点训练测试 ===
+  样本 1: (128, 128, 3)
+  样本 2: (128, 128, 3)
+  样本 3: (128, 128, 3)
+  样本 4: (128, 128, 3)
+数据: X (4, 128, 128, 3), Y (4, 128, 128)
+配置: epochs=3, steps_per_epoch=3
+Using default values: prob_thresh=0.5, nms_thresh=0.4.
+开始训练（禁用保存）...
+❌ 训练失败: 'StarDist2D' object has no attribute '_loss'

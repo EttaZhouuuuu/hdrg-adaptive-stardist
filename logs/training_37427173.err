@@ -1,0 +1,20 @@
+2025-09-29 09:44:46.454503: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+base_model.py (203): output path for model already exists, files may be overwritten: /hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/models/adaptive/multi_scale_stardist
+2025-09-29 09:45:15.972010: I tensorflow/core/common_runtime/process_util.cc:146] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 197, in <module>
+    main()
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 186, in main
+    model.train_with_generator(
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/adaptive_stardist/multi_scale_model.py", line 129, in train_with_generator
+    batch = next(train_data)
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/csbdeep/internals/train.py", line 114, in __iter__
+    yield self[i]
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/adaptive_stardist/training.py", line 239, in __getitem__
+    tf.cast(tf.shape(batch_x)[1:3] * scale, tf.int32)
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/tensorflow/python/util/traceback_utils.py", line 153, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/tensorflow/python/ops/gen_math_ops.py", line 6576, in mul
+    _result = pywrap_tfe.TFE_Py_FastPathExecute(
+TypeError: Cannot convert 0.5 to EagerTensor of dtype int32

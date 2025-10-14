@@ -1,0 +1,18 @@
+2025-09-29 08:41:55.246649: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+base_model.py (203): output path for model already exists, files may be overwritten: /hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/models/adaptive/multi_scale_stardist
+2025-09-29 08:42:28.346333: I tensorflow/core/common_runtime/process_util.cc:146] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 208, in <module>
+    main()
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 175, in main
+    train_data = MultiScaleStarDistData2D(
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/adaptive_stardist/training.py", line 214, in __init__
+    super().__init__(X, Y, batch_size, **kwargs)
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/stardist/models/model2d.py", line 38, in __init__
+    super().__init__(X=X, Y=Y, n_rays=n_rays, grid=grid,
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/stardist/models/base.py", line 152, in __init__
+    patch_size = grid_divisible_patch_size(patch_size, grid)
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/stardist/utils.py", line 398, in grid_divisible_patch_size
+    patch_size, grid = tuple(patch_size), tuple(grid)
+TypeError: 'int' object is not iterable

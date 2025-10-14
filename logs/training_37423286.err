@@ -1,0 +1,10 @@
+2025-09-29 05:56:51.867420: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 200, in <module>
+    main()
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 116, in main
+    X, Y = load_training_data(args.data_path, args.slides)
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 67, in load_training_data
+    available_slides = [name for name in os.listdir(data_path)
+FileNotFoundError: [Errno 2] No such file or directory: '/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/data'

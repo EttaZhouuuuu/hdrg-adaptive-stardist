@@ -1,0 +1,24 @@
+=== 基础训练测试 ===
+  加载样本 1: (128, 128, 3), mask唯一值: [0 1]
+  加载样本 2: (128, 128, 3), mask唯一值: [0 1]
+  加载样本 3: (128, 128, 3), mask唯一值: [0 1]
+  加载样本 4: (128, 128, 3), mask唯一值: [0 1]
+数据形状: X (4, 128, 128, 3), Y (4, 128, 128)
+配置: n_rays=16, patch_size=(64, 64)
+创建模型...
+Using default values: prob_thresh=0.5, nms_thresh=0.4.
+开始训练...
+调用 model.train()...
+Epoch 1/2
+1/2 [==============>...............] - ETA: 2s - loss: 1.7770 - prob_loss: 0.6882 - dist_loss: 5.4440 - prob_kld: 0.6769 - dist_relevant_mae: 5.4440 - dist_relevant_mse: 42.7093 - dist_dist_iou_metric: 4.9249e-062/2 [==============================] - ETA: 0s - loss: 1.6048 - prob_loss: 0.6522 - dist_loss: 4.7633 - prob_kld: 0.6338 - dist_relevant_mae: 4.7633 - dist_relevant_mse: 32.7291 - dist_dist_iou_metric: 1.4938e-052/2 [==============================] - 4s 1s/step - loss: 1.6048 - prob_loss: 0.6522 - dist_loss: 4.7633 - prob_kld: 0.6338 - dist_relevant_mae: 4.7633 - dist_relevant_mse: 32.7291 - dist_dist_iou_metric: 1.4938e-05 - val_loss: 1.4349 - val_prob_loss: 0.3698 - val_dist_loss: 5.3255 - val_prob_kld: 0.3397 - val_dist_relevant_mae: 5.3255 - val_dist_relevant_mse: 40.2445 - val_dist_dist_iou_metric: 3.1547e-04 - lr: 0.0010
+Epoch 2/2
+1/2 [==============>...............] - ETA: 0s - loss: 1.1607 - prob_loss: 0.3565 - dist_loss: 4.0210 - prob_kld: 0.3486 - dist_relevant_mae: 4.0210 - dist_relevant_mse: 23.3214 - dist_dist_iou_metric: 6.3107e-042/2 [==============================] - ETA: 0s - loss: 0.9535 - prob_loss: 0.1963 - dist_loss: 3.7859 - prob_kld: 0.1898 - dist_relevant_mae: 3.7858 - dist_relevant_mse: 22.1525 - dist_dist_iou_metric: 0.0096    2/2 [==============================] - 0s 178ms/step - loss: 0.9535 - prob_loss: 0.1963 - dist_loss: 3.7859 - prob_kld: 0.1898 - dist_relevant_mae: 3.7858 - dist_relevant_mse: 22.1525 - dist_dist_iou_metric: 0.0096 - val_loss: 1.4441 - val_prob_loss: 0.3076 - val_dist_loss: 5.6827 - val_prob_kld: 0.2774 - val_dist_relevant_mae: 5.6819 - val_dist_relevant_mse: 66.6728 - val_dist_dist_iou_metric: 0.1777 - lr: 0.0010
+
+Loading network weights from 'weights_best.h5'.
+✅ 训练成功完成！
+训练历史键: ['loss', 'prob_loss', 'dist_loss', 'prob_kld', 'dist_relevant_mae', 'dist_relevant_mse', 'dist_dist_iou_metric', 'val_loss', 'val_prob_loss', 'val_dist_loss', 'val_prob_kld', 'val_dist_relevant_mae', 'val_dist_relevant_mse', 'val_dist_dist_iou_metric', 'lr']
+最终损失: 0.9534611701965332
+测试预测功能...
+预测成功: labels (128, 128), 唯一值数量: 1
+测试模型保存...
+❌ 训练失败: 'StarDist2D' object has no attribute 'save_weights'

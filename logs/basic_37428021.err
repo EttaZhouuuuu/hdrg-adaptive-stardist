@@ -1,0 +1,25 @@
+2025-09-29 11:49:46.357793: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-09-29 11:50:14.697125: I tensorflow/core/common_runtime/process_util.cc:146] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+2025-09-29 11:50:15.070047: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'Placeholder/_0' with dtype int32
+	 [[{{node Placeholder/_0}}]]
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_basic_test.py", line 91, in main
+    history = model.train(X, Y, validation_data=(X[:2], Y[:2]))
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/stardist/models/model2d.py", line 504, in train
+    history = fit(iter(self.data_train), validation_data=data_val,
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/wandb/integration/keras/keras.py", line 171, in new_v2
+    return old_v2(*args, **kwargs)
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/wandb/integration/keras/keras.py", line 171, in new_v2
+    return old_v2(*args, **kwargs)
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/wandb/integration/keras/keras.py", line 171, in new_v2
+    return old_v2(*args, **kwargs)
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/keras/utils/traceback_utils.py", line 70, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/keras/saving/legacy/save.py", line 351, in save_weights
+    raise ImportError(
+ImportError: `save_weights` requires h5py when saving in hdf5, but h5py is not available. Try installing h5py package.
+2025-09-29 11:50:17.807740: I tensorflow/core/common_runtime/executor.cc:1197] [/job:localhost/replica:0/task:0/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): FAILED_PRECONDITION: Python interpreter state is not initialized. The process may be terminated.
+	 [[{{node PyFunc}}]]
+2025-09-29 11:50:17.807810: W tensorflow/core/kernels/data/generator_dataset_op.cc:108] Error occurred when finalizing GeneratorDataset iterator: FAILED_PRECONDITION: Python interpreter state is not initialized. The process may be terminated.
+	 [[{{node PyFunc}}]]

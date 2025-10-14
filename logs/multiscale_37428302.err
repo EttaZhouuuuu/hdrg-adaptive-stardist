@@ -1,0 +1,25 @@
+2025-09-29 12:17:37.855688: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+base_model.py (203): output path for model already exists, files may be overwritten: /hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/models/multiscale/stardist_scale_1_0
+2025-09-29 12:17:56.923148: I tensorflow/core/common_runtime/process_util.cc:146] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+2025-09-29 12:17:57.280988: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'Placeholder/_0' with dtype int32
+	 [[{{node Placeholder/_0}}]]
+base_model.py (203): output path for model already exists, files may be overwritten: /hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/models/multiscale/stardist_scale_0_5
+2025-09-29 12:18:05.270151: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'Placeholder/_0' with dtype int32
+	 [[{{node Placeholder/_0}}]]
+_warps.py (184): divide by zero encountered in double_scalars
+_interpolation.py (821): invalid value encountered in double_scalars
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_multiscale_working.py", line 267, in <module>
+    success = main()
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_multiscale_working.py", line 256, in main
+    fused_result, all_preds = simple_multiscale_fusion(models, test_img, scale_factors)
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_multiscale_working.py", line 176, in simple_multiscale_fusion
+    prob_resized = transform.resize(
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/skimage/transform/_warps.py", line 185, in resize
+    out = ndi.zoom(filtered, zoom_factors, order=order, mode=ndi_mode,
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/scipy/ndimage/_interpolation.py", line 821, in zoom
+    [int(round(ii * jj)) for ii, jj in zip(input.shape, zoom)])
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/scipy/ndimage/_interpolation.py", line 821, in <listcomp>
+    [int(round(ii * jj)) for ii, jj in zip(input.shape, zoom)])
+ValueError: cannot convert float NaN to integer

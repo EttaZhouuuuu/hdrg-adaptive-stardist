@@ -1,0 +1,21 @@
+Anaconda3 2024.02
+ERROR: Unable to locate a modulefile for 'CUDA/11.8'
+
+EnvironmentNameNotFound: Could not find conda environment: hdrg_adaptive
+You can list all discoverable environments with `conda info --envs`.
+
+
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 8, in <module>
+    from skimage import io
+  File "/opt/apps/rhel9/Anaconda3-2024.02/lib/python3.11/site-packages/skimage/__init__.py", line 122, in <module>
+    from ._shared import geometry
+  File "geometry.pyx", line 1, in init skimage._shared.geometry
+ValueError: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/run_adaptive_inference.py", line 11, in <module>
+    from skimage import io
+  File "/opt/apps/rhel9/Anaconda3-2024.02/lib/python3.11/site-packages/skimage/__init__.py", line 122, in <module>
+    from ._shared import geometry
+  File "geometry.pyx", line 1, in init skimage._shared.geometry
+ValueError: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject

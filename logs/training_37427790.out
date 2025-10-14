@@ -1,0 +1,252 @@
+=== Multi-Scale Adaptive StarDist Training - Fixed Version ===
+Parameters: epochs=50, batch_size=2
+Max samples: 50
+Loading data from: /hpc/group/yizhanglab/shared/hDRG_autoseg/processed_data
+Slides to process: 240819_Ji_N1_H_EScan
+Max samples: 50
+Available slides: ['240819_Ji_N3_H_EScan', '240819_Ji_N1_H_EScan', '241230_Ji_D5_H_EScan', '240819_Ji_D3_H_EScan', '241230_Ji_D4_H_EScan', '241230_Ji_N5_H_EScan', '240819_Ji_D1_H_EScan', '241230_Ji_N4_H_EScan', '240819_Ji_D2_H_EScan', '240819_Ji_N2_H_EScan']
+Processing slide 240819_Ji_N1_H_EScan:
+  Patches dir: /hpc/group/yizhanglab/shared/hDRG_autoseg/processed_data/240819_Ji_N1_H_EScan/patches_2048
+  Masks dir: /hpc/group/yizhanglab/shared/hDRG_autoseg/processed_data/240819_Ji_N1_H_EScan/pseudo_gt_masks_2048
+  Found 106 patch files
+  已加载 10 个样本...
+  已加载 20 个样本...
+  已加载 30 个样本...
+  已加载 40 个样本...
+  已加载 50 个样本...
+达到最大样本数 50，停止加载
+
+Final data shapes:
+X: (50, 2048, 2048, 3) float32
+Y: (50, 2048, 2048) uint8
+Total samples loaded: 50
+Loaded 50 training samples
+
+Data split:
+Training: 45 samples
+Validation: 5 samples
+Scale factors: [1.0, 0.5]
+Model configuration: n_rays=96, grid=(2, 2)
+Using default values: prob_thresh=0.5, nms_thresh=0.4.
+
+创建数据生成器...
+MultiScaleStarDistData2D: 45 samples, scales=[1.0, 0.5]
+MultiScaleStarDistData2D: 5 samples, scales=[1.0, 0.5]
+数据生成器创建成功
+
+开始训练...
+开始训练: 50 epochs, 22 steps/epoch
+
+Epoch 1/50
+Warning: 形状不一致 [(2, 128, 128, 1), (2, 128, 128, 97)], 使用第一个元素
+训练步骤失败: 不支持的形状: (1, 2, 256, 256, 3)
+Warning: 形状不一致 [(2, 128, 128, 1), (2, 128, 128, 97)], 使用第一个元素
+验证失败: 不支持的形状: (1, 2, 256, 256, 3)
+
+Epoch 2/50
+数据生成器结束
+验证失败: 
+
+Epoch 3/50
+数据生成器结束
+验证失败: 
+
+Epoch 4/50
+数据生成器结束
+验证失败: 
+
+Epoch 5/50
+数据生成器结束
+验证失败: 
+模型保存失败: 'MultiScaleStarDist2D' object has no attribute 'save_weights'
+
+Epoch 6/50
+数据生成器结束
+验证失败: 
+
+Epoch 7/50
+数据生成器结束
+验证失败: 
+
+Epoch 8/50
+数据生成器结束
+验证失败: 
+
+Epoch 9/50
+数据生成器结束
+验证失败: 
+
+Epoch 10/50
+数据生成器结束
+验证失败: 
+模型保存失败: 'MultiScaleStarDist2D' object has no attribute 'save_weights'
+
+Epoch 11/50
+数据生成器结束
+验证失败: 
+
+Epoch 12/50
+数据生成器结束
+验证失败: 
+
+Epoch 13/50
+数据生成器结束
+验证失败: 
+
+Epoch 14/50
+数据生成器结束
+验证失败: 
+
+Epoch 15/50
+数据生成器结束
+验证失败: 
+模型保存失败: 'MultiScaleStarDist2D' object has no attribute 'save_weights'
+
+Epoch 16/50
+数据生成器结束
+验证失败: 
+
+Epoch 17/50
+数据生成器结束
+验证失败: 
+
+Epoch 18/50
+数据生成器结束
+验证失败: 
+
+Epoch 19/50
+数据生成器结束
+验证失败: 
+
+Epoch 20/50
+数据生成器结束
+验证失败: 
+模型保存失败: 'MultiScaleStarDist2D' object has no attribute 'save_weights'
+
+Epoch 21/50
+数据生成器结束
+验证失败: 
+
+Epoch 22/50
+数据生成器结束
+验证失败: 
+
+Epoch 23/50
+数据生成器结束
+验证失败: 
+
+Epoch 24/50
+数据生成器结束
+验证失败: 
+
+Epoch 25/50
+数据生成器结束
+验证失败: 
+模型保存失败: 'MultiScaleStarDist2D' object has no attribute 'save_weights'
+
+Epoch 26/50
+数据生成器结束
+验证失败: 
+
+Epoch 27/50
+数据生成器结束
+验证失败: 
+
+Epoch 28/50
+数据生成器结束
+验证失败: 
+
+Epoch 29/50
+数据生成器结束
+验证失败: 
+
+Epoch 30/50
+数据生成器结束
+验证失败: 
+模型保存失败: 'MultiScaleStarDist2D' object has no attribute 'save_weights'
+
+Epoch 31/50
+数据生成器结束
+验证失败: 
+
+Epoch 32/50
+数据生成器结束
+验证失败: 
+
+Epoch 33/50
+数据生成器结束
+验证失败: 
+
+Epoch 34/50
+数据生成器结束
+验证失败: 
+
+Epoch 35/50
+数据生成器结束
+验证失败: 
+模型保存失败: 'MultiScaleStarDist2D' object has no attribute 'save_weights'
+
+Epoch 36/50
+数据生成器结束
+验证失败: 
+
+Epoch 37/50
+数据生成器结束
+验证失败: 
+
+Epoch 38/50
+数据生成器结束
+验证失败: 
+
+Epoch 39/50
+数据生成器结束
+验证失败: 
+
+Epoch 40/50
+数据生成器结束
+验证失败: 
+模型保存失败: 'MultiScaleStarDist2D' object has no attribute 'save_weights'
+
+Epoch 41/50
+数据生成器结束
+验证失败: 
+
+Epoch 42/50
+数据生成器结束
+验证失败: 
+
+Epoch 43/50
+数据生成器结束
+验证失败: 
+
+Epoch 44/50
+数据生成器结束
+验证失败: 
+
+Epoch 45/50
+数据生成器结束
+验证失败: 
+模型保存失败: 'MultiScaleStarDist2D' object has no attribute 'save_weights'
+
+Epoch 46/50
+数据生成器结束
+验证失败: 
+
+Epoch 47/50
+数据生成器结束
+验证失败: 
+
+Epoch 48/50
+数据生成器结束
+验证失败: 
+
+Epoch 49/50
+数据生成器结束
+验证失败: 
+
+Epoch 50/50
+数据生成器结束
+验证失败: 
+模型保存失败: 'MultiScaleStarDist2D' object has no attribute 'save_weights'
+训练完成！
+Training completed successfully!

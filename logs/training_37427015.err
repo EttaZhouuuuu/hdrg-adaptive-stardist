@@ -1,0 +1,4 @@
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 115
+    cat > /hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py << 'EOL'
+          ^
+SyntaxError: invalid syntax

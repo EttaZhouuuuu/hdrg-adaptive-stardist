@@ -1,0 +1,13 @@
+=== 基础训练测试 ===
+  加载样本 1: (128, 128, 3), mask唯一值: [0 1]
+  加载样本 2: (128, 128, 3), mask唯一值: [0 1]
+  加载样本 3: (128, 128, 3), mask唯一值: [0 1]
+  加载样本 4: (128, 128, 3), mask唯一值: [0 1]
+数据形状: X (4, 128, 128, 3), Y (4, 128, 128)
+配置: n_rays=16, patch_size=(64, 64)
+创建模型...
+Using default values: prob_thresh=0.5, nms_thresh=0.4.
+开始训练...
+调用 model.train()...
+Epoch 1/2
+1/2 [==============>...............] - ETA: 2s - loss: 1.6443 - prob_loss: 0.6854 - dist_loss: 4.7949 - prob_kld: 0.6723 - dist_relevant_mae: 4.7949 - dist_relevant_mse: 30.6541 - dist_dist_iou_metric: 1.9849e-062/2 [==============================] - ETA: 0s - loss: 1.6661 - prob_loss: 0.6370 - dist_loss: 5.1452 - prob_kld: 0.6174 - dist_relevant_mae: 5.1452 - dist_relevant_mse: 36.3521 - dist_dist_iou_metric: 1.3423e-05❌ 训练失败: `save_weights` requires h5py when saving in hdf5, but h5py is not available. Try installing h5py package.

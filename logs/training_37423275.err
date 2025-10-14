@@ -1,0 +1,6 @@
+2025-09-29 05:52:45.434063: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 11, in <module>
+    from adaptive_stardist import AdaptiveStarDist2D, AdaptiveConfig2D
+ImportError: cannot import name 'AdaptiveConfig2D' from 'adaptive_stardist' (/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/adaptive_stardist/__init__.py)

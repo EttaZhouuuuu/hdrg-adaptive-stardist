@@ -1,0 +1,6 @@
+2025-09-29 11:22:05.301095: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 430, in <module>
+    from adaptive_stardist.training_final import ScaleAwareLoss, MultiScaleStarDistData2D
+ModuleNotFoundError: No module named 'adaptive_stardist.training_final'

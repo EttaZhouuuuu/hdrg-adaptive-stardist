@@ -1,0 +1,27 @@
+2025-09-30 00:26:36.723334: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+base_model.py (203): output path for model already exists, files may be overwritten: /hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/models/multiscale_4scales_test/stardist_scale_1_0
+2025-09-30 00:27:23.674916: I tensorflow/core/common_runtime/process_util.cc:146] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+2025-09-30 00:27:24.546539: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'Placeholder/_0' with dtype int32
+	 [[{{node Placeholder/_0}}]]
+base_model.py (203): output path for model already exists, files may be overwritten: /hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/models/multiscale_4scales_test/stardist_scale_0_75
+2025-09-30 00:27:49.614099: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'Placeholder/_0' with dtype int32
+	 [[{{node Placeholder/_0}}]]
+base_model.py (203): output path for model already exists, files may be overwritten: /hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/models/multiscale_4scales_test/stardist_scale_0_5
+2025-09-30 00:28:13.264029: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'Placeholder/_0' with dtype int32
+	 [[{{node Placeholder/_0}}]]
+base_model.py (203): output path for model already exists, files may be overwritten: /hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/models/multiscale_4scales_test/stardist_scale_0_25
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_multiscale_enhanced.py", line 201, in train_single_scale_enhanced
+    history = model.train(X_train, Y_train, validation_data=(X_val, Y_val))
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/stardist/models/model2d.py", line 451, in train
+    _data_val = StarDistData2D(validation_data[0],validation_data[1], classes=classes_val, batch_size=n_take, length=1, **data_kwargs)
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/stardist/models/model2d.py", line 38, in __init__
+    super().__init__(X=X, Y=Y, n_rays=n_rays, grid=grid,
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/stardist/models/base.py", line 162, in __init__
+    all(x.shape[:nD]>=tuple(patch_size) for x in X) or _raise(ValueError("Some images are too small for given patch_size {patch_size}".format(patch_size=patch_size)))
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/csbdeep/utils/utils.py", line 89, in _raise
+    raise e
+ValueError: Some images are too small for given patch_size (128, 128)
+_warps.py (184): divide by zero encountered in double_scalars
+_interpolation.py (821): invalid value encountered in double_scalars

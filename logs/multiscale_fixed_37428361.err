@@ -1,0 +1,11 @@
+2025-09-29 12:26:26.329749: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+base_model.py (203): output path for model already exists, files may be overwritten: /hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/models/multiscale_fixed/stardist_scale_1_0
+2025-09-29 12:26:43.831684: I tensorflow/core/common_runtime/process_util.cc:146] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+2025-09-29 12:26:44.226338: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'Placeholder/_0' with dtype int32
+	 [[{{node Placeholder/_0}}]]
+base_model.py (203): output path for model already exists, files may be overwritten: /hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/models/multiscale_fixed/stardist_scale_0_5
+2025-09-29 12:26:52.232230: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'Placeholder/_0' with dtype int32
+	 [[{{node Placeholder/_0}}]]
+_warps.py (184): divide by zero encountered in double_scalars
+_interpolation.py (821): invalid value encountered in double_scalars

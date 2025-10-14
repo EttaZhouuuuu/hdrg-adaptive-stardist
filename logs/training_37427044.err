@@ -1,0 +1,14 @@
+2025-09-29 09:16:44.180888: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 180, in <module>
+    main()
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_adaptive_stardist.py", line 121, in main
+    conf = MultiScaleConfig2D(
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/adaptive_stardist/multi_scale_model.py", line 14, in __init__
+    super().__init__(**kwargs)
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/stardist/models/model2d.py", line 265, in __init__
+    self.update_parameters(False, **kwargs)
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/csbdeep/models/config.py", line 73, in update_parameters
+    raise AttributeError("Not allowed to add new parameters (%s)" % ', '.join(attr_new))
+AttributeError: Not allowed to add new parameters (min_n_rays, max_n_rays, min_grid, max_grid)

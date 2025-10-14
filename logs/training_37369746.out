@@ -1,0 +1,37 @@
+🚀 Starting Multi-Scale Adaptive StarDist Training
+Job ID: 37369746
+Node: dcc-core-gpu-44
+Time: Sat Sep 27 09:54:31 AM EDT 2025
+GPU Info:
+Sat Sep 27 09:54:33 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 575.57.08              Driver Version: 575.57.08      CUDA Version: 12.9     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 5000 Ada Gene...    On  |   00000000:13:00.0 Off |                    0 |
+| 30%   18C    P8             15W /  250W |       1MiB /  30712MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+Python Environment:
+/opt/apps/rhel9/Anaconda3-2024.02/bin/python
+Python 3.11.7
+numpy                             2.2.6
+numpydoc                          1.5.0
+scikit-image                      0.22.0
+tensorflow                        2.19.0
+tensorflow-io-gcs-filesystem      0.37.1
+🎯 Starting training...
+✅ Training completed at Sat Sep 27 09:54:49 AM EDT 2025
+🔮 Testing inference...
+🎉 Job completed successfully at Sat Sep 27 09:54:50 AM EDT 2025

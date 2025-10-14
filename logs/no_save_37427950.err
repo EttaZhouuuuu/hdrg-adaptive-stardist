@@ -1,0 +1,12 @@
+2025-09-29 11:43:21.779113: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Traceback (most recent call last):
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_no_save_test.py", line 104, in <module>
+    main()
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/scripts/train_no_save_test.py", line 65, in main
+    conf = Config2D(
+  File "/hpc/group/yizhanglab/yz814/hdrg-adaptive-stardist/stardist/models/model2d.py", line 265, in __init__
+    self.update_parameters(False, **kwargs)
+  File "/hpc/group/yizhanglab/yz814/envs/hdrg_adaptive/lib/python3.9/site-packages/csbdeep/models/config.py", line 73, in update_parameters
+    raise AttributeError("Not allowed to add new parameters (%s)" % ', '.join(attr_new))
+AttributeError: Not allowed to add new parameters (train_save_every_epochs)

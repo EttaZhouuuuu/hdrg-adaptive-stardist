@@ -1,0 +1,14 @@
+{
+  "scale": 0.75,
+  "training_time": 264.6731126308441,
+  "n_epochs": 120,
+  "n_train_samples": 45,
+  "n_val_samples": 5,
+  "prediction_shape": [
+    192,
+    192
+  ],
+  "n_detected_objects": 8,
+  "final_loss": 0.27802714705467224,
+  "final_val_loss": 0.46566328406333923
+}

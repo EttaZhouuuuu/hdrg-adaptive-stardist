@@ -1,0 +1,73 @@
+{
+  "total_training_time": 795.8838567733765,
+  "n_scales": 5,
+  "successful_scales": 3,
+  "scale_summaries": [
+    {
+      "scale": 1.0,
+      "training_time": 264.1654222011566,
+      "n_epochs": 120,
+      "n_train_samples": 45,
+      "n_val_samples": 5,
+      "prediction_shape": [
+        256,
+        256
+      ],
+      "n_detected_objects": 10,
+      "final_loss": 0.37936320900917053,
+      "final_val_loss": 0.47038260102272034
+    },
+    {
+      "scale": 0.75,
+      "training_time": 264.6731126308441,
+      "n_epochs": 120,
+      "n_train_samples": 45,
+      "n_val_samples": 5,
+      "prediction_shape": [
+        192,
+        192
+      ],
+      "n_detected_objects": 8,
+      "final_loss": 0.27802714705467224,
+      "final_val_loss": 0.46566328406333923
+    },
+    {
+      "scale": 0.5,
+      "training_time": 264.8614411354065,
+      "n_epochs": 120,
+      "n_train_samples": 45,
+      "n_val_samples": 5,
+      "prediction_shape": [
+        128,
+        128
+      ],
+      "n_detected_objects": 5,
+      "final_loss": 0.11246734857559204,
+      "final_val_loss": 0.23957061767578125
+    }
+  ],
+  "config": {
+    "n_rays": 32,
+    "grid": [
+      2,
+      2
+    ],
+    "n_channel_in": 3,
+    "train_patch_size": [
+      128,
+      128
+    ],
+    "train_batch_size": 3,
+    "train_learning_rate": 0.001
+  },
+  "args": {
+    "data_path": "/hpc/group/yizhanglab/shared/hDRG_autoseg/processed_data",
+    "slides": "240819_Ji_N1_H_EScan",
+    "ckpt_path": "./models/multiscale_3scales",
+    "n_epochs": 120,
+    "batch_size": 3,
+    "max_samples": 50,
+    "scale_factors": "1.0,0.75,0.5, 0.25, 0.125",
+    "resume": true
+  }
+}
