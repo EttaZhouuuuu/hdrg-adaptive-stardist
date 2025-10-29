@@ -19,6 +19,7 @@ import numpy as np
 from pathlib import Path
 
 from .backbone import UNetBackbone, ResNetBackbone
+from .fpn_backbone import FPNBackbone
 from ..core.shape_encoder import AdaptiveShapeEncoder
 from ..core.shape_prior import ShapePriorEncoder
 
@@ -71,6 +72,11 @@ class AdaptiveShapeConfig:
         num_shape_prototypes=16,
         deformable_groups=4,
         grid=(1, 1),
+        # FPN specific parameters
+        use_fpn=False,
+        fpn_channels=256,
+        fpn_levels=['p2', 'p3', 'p4', 'p5'],
+        multiscale_prediction=False,
         train_learning_rate=3e-4,
         train_epochs=100,
         train_steps_per_epoch=100,
@@ -89,6 +95,12 @@ class AdaptiveShapeConfig:
         self.use_shape_prior = use_shape_prior
         self.num_shape_prototypes = num_shape_prototypes
         self.deformable_groups = deformable_groups
+        
+        # FPN configuration
+        self.use_fpn = use_fpn
+        self.fpn_channels = fpn_channels
+        self.fpn_levels = fpn_levels
+        self.multiscale_prediction = multiscale_prediction
         
         # Output configuration
         self.grid = grid
@@ -144,13 +156,23 @@ class AdaptiveShapeStarDist(keras.Model):
         """Build all model components"""
         
         # 1. Backbone network
-        if self.config.backbone == 'unet':
+        if self.config.use_fpn:
+            # Use FPN backbone (overrides backbone setting)
+            self.backbone = FPNBackbone(
+                n_channel_in=self.config.n_channel_in,
+                backbone='resnet34',  # FPN uses ResNet by default
+                fpn_channels=self.config.fpn_channels,
+                name='fpn_backbone'
+            )
+            self.is_fpn = True
+        elif self.config.backbone == 'unet':
             self.backbone = UNetBackbone(
                 n_depth=self.config.n_depth,
                 n_filter_base=self.config.n_filter_base,
                 n_channel_in=self.config.n_channel_in,
                 name='backbone'
             )
+            self.is_fpn = False
         elif self.config.backbone == 'resnet':
             self.backbone = ResNetBackbone(
                 n_blocks=self.config.n_depth,
@@ -158,6 +180,7 @@ class AdaptiveShapeStarDist(keras.Model):
                 n_channel_in=self.config.n_channel_in,
                 name='backbone'
             )
+            self.is_fpn = False
         else:
             raise ValueError(f"Unknown backbone: {self.config.backbone}")
         
@@ -184,10 +207,13 @@ class AdaptiveShapeStarDist(keras.Model):
         )
         
         # 4. Output heads
-        self._build_output_heads()
+        if self.is_fpn and self.config.multiscale_prediction:
+            self._build_multiscale_heads()
+        else:
+            self._build_output_heads()
     
     def _build_output_heads(self):
-        """Build output prediction heads"""
+        """Build single-scale output prediction heads"""
         
         # Instance probability head
         self.prob_head = keras.Sequential([
@@ -210,6 +236,35 @@ class AdaptiveShapeStarDist(keras.Model):
             layers.Dense(1, activation='sigmoid'),
         ], name='complexity_head')
     
+    def _build_multiscale_heads(self):
+        """Build multi-scale output prediction heads for FPN"""
+        
+        # Create separate heads for each FPN level
+        self.prob_heads = {}
+        self.dist_heads = {}
+        
+        for level in self.config.fpn_levels:
+            # Probability head for this level
+            self.prob_heads[level] = keras.Sequential([
+                layers.Conv2D(128, 3, padding='same', activation='relu'),
+                layers.Conv2D(64, 3, padding='same', activation='relu'),
+                layers.Conv2D(1, 1, activation='sigmoid'),
+            ], name=f'prob_head_{level}')
+            
+            # Distance head for this level
+            self.dist_heads[level] = keras.Sequential([
+                layers.Conv2D(128, 3, padding='same', activation='relu'),
+                layers.Conv2D(64, 3, padding='same', activation='relu'),
+                layers.Conv2D(self.config.max_sampling_points, 1, activation='relu'),
+            ], name=f'dist_head_{level}')
+        
+        # Single complexity head (global, not scale-specific)
+        self.complexity_head = keras.Sequential([
+            layers.GlobalAveragePooling2D(),
+            layers.Dense(64, activation='relu'),
+            layers.Dense(1, activation='sigmoid'),
+        ], name='complexity_head')
+    
     def call(self, inputs, training=None):
         """
         Forward pass
@@ -224,12 +279,17 @@ class AdaptiveShapeStarDist(keras.Model):
         Returns:
         --------
         output : dict
-            Dictionary containing:
-            - 'prob': Instance probability map [B, H, W, 1]
-            - 'dist': Distance predictions [B, H, W, N_points]
-            - 'sampling_points': Adaptive sampling points [B, N_points, 2]
-            - 'complexity': Shape complexity [B, 1]
-            - 'features': Intermediate features
+            If multiscale_prediction=False (default):
+                - 'prob': Instance probability map [B, H, W, 1]
+                - 'dist': Distance predictions [B, H, W, N_points]
+                - 'sampling_points': Adaptive sampling points [B, N_points, 2]
+                - 'complexity': Shape complexity [B, 1]
+                - 'features': Intermediate features
+            If multiscale_prediction=True (FPN):
+                - 'multiscale_predictions': dict with keys 'p2', 'p3', 'p4', 'p5'
+                  Each containing {'prob': ..., 'dist': ...}
+                - 'complexity': Shape complexity [B, 1]
+                - 'fpn_features': FPN feature pyramid
         """
         
         # Handle input format
@@ -240,6 +300,15 @@ class AdaptiveShapeStarDist(keras.Model):
         
         # 1. Extract features with backbone
         backbone_output = self.backbone(image, training=training)
+        
+        # Check if using FPN
+        if self.is_fpn:
+            return self._forward_fpn(backbone_output, training=training)
+        else:
+            return self._forward_standard(backbone_output, training=training)
+    
+    def _forward_standard(self, backbone_output, training=None):
+        """Standard forward pass (single scale)"""
         features = backbone_output['features']
         
         # 2. Apply shape prior encoding (if enabled)
@@ -280,6 +349,91 @@ class AdaptiveShapeStarDist(keras.Model):
         
         if prototype_weights is not None:
             output['prototype_weights'] = prototype_weights
+        
+        return output
+    
+    def _forward_fpn(self, backbone_output, training=None):
+        """FPN forward pass (multi-scale)"""
+        
+        # FPN features: p2, p3, p4, p5
+        fpn_features = backbone_output
+        
+        if self.config.multiscale_prediction:
+            # Multi-scale predictions: predict at each FPN level
+            multiscale_predictions = {}
+            
+            for level in self.config.fpn_levels:
+                features = fpn_features[level]
+                
+                # Apply shape prior encoding (if enabled)
+                if self.shape_prior_encoder is not None:
+                    prior_output = self.shape_prior_encoder(
+                        {'features': features},
+                        training=training
+                    )
+                    features = prior_output['prior_features']
+                
+                # Predict at this scale
+                prob = self.prob_heads[level](features, training=training)
+                dist = self.dist_heads[level](features, training=training)
+                
+                multiscale_predictions[level] = {
+                    'prob': prob,
+                    'dist': dist,
+                }
+            
+            # Global complexity from finest scale (p2)
+            complexity = self.complexity_head(fpn_features['p2'])
+            
+            output = {
+                'multiscale_predictions': multiscale_predictions,
+                'complexity': complexity,
+                'fpn_features': fpn_features,
+            }
+            
+        else:
+            # Single-scale prediction: use only p2 (highest resolution)
+            features = fpn_features['p2']
+            
+            # Apply shape prior encoding (if enabled)
+            if self.shape_prior_encoder is not None:
+                prior_output = self.shape_prior_encoder(
+                    {'features': features},
+                    training=training
+                )
+                features = prior_output['prior_features']
+                prototype_weights = prior_output['prototype_weights']
+            else:
+                prototype_weights = None
+            
+            # Adaptive shape encoding
+            shape_output = self.shape_encoder(
+                {'features': features},
+                training=training
+            )
+            
+            shape_features = shape_output['shape_features']
+            sampling_points = shape_output['sampling_points']
+            complexity = shape_output['complexity']
+            
+            # Predict outputs
+            prob = self.prob_head(shape_features, training=training)
+            dist = self.dist_head(shape_features, training=training)
+            
+            # Assemble output
+            output = {
+                'prob': prob,
+                'dist': dist,
+                'sampling_points': sampling_points,
+                'point_features': shape_output['point_features'],
+                'complexity': complexity,
+                'shape_descriptor': shape_output['shape_descriptor'],
+                'features': shape_features,
+                'fpn_features': fpn_features,  # Include FPN features for analysis
+            }
+            
+            if prototype_weights is not None:
+                output['prototype_weights'] = prototype_weights
         
         return output
     
