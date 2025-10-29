@@ -1,0 +1,149 @@
+\documentclass[acmlarge]{acmart}
+
+% Remove copyright information
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\pagestyle{plain}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\begin{document}
+
+\title{Shape-Aware Deep Learning for Nucleus Instance Segmentation: A Transformer-Enhanced StarDist Approach}
+
+\author{Yitong Zhou}
+\affiliation{%
+  \institution{Duke University}
+  \city{Durham}
+  \state{NC}
+  \country{USA}
+}
+\email{yitong.zhou@duke.edu}
+
+\begin{abstract}
+Accurate nucleus instance segmentation is fundamental for computational pathology and biological research, yet existing methods struggle with irregular morphologies and varying scales. This project proposes Shape-Aware StarDist, a novel deep learning framework that integrates transformer-based shape attention mechanisms, deformable convolutions, and adaptive sampling strategies to enhance nucleus detection in microscopy images. Using the Data Science Bowl 2018 (DSB2018) nucleus dataset, we aim to develop a robust segmentation system that adapts to diverse cellular morphologies through learned shape priors and dynamic feature extraction. Our approach addresses critical limitations in current instance segmentation methods by incorporating geometric reasoning and adaptive representations. This interdisciplinary project bridges machine learning, computer vision, and biomedical image analysis to advance automated microscopy analysis tools.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction \& Motivation}
+
+In this Data + X project, \textbf{X represents Biomedical Image Analysis}, specifically automated nucleus instance segmentation in microscopy images. Nucleus segmentation enables quantitative analysis for disease diagnosis, drug discovery, and biological research~\cite{schmidt2018cell, caicedo2019nucleus}. However, morphological diversity across cell types, tissues, and imaging conditions presents significant computational challenges. Current methods like StarDist~\cite{schmidt2018cell} use fixed radial ray representations that excel on regular shapes but fail on complex, non-convex boundaries common in biological specimens. Similarly, Mask R-CNN~\cite{he2017mask} lacks explicit geometric constraints, causing inconsistent predictions and difficulty separating touching instances.
+
+This project addresses these limitations through a shape-aware framework integrating three innovations: (1) transformer-based attention to learn shape prototypes and capture global context, (2) deformable convolutions for adaptive spatial sampling on complex boundaries, and (3) hybrid loss functions balancing accuracy with geometric constraints. This approach improves segmentation on irregular morphologies, directly impacting clinical diagnostics and biological discovery.
+
+\section{Research Questions}
+
+\textbf{RQ1: How can transformer-based attention improve shape representation for irregular nucleus morphologies?} We hypothesize that self-attention and learned shape prototypes will capture global context and long-range dependencies, improving boundary predictions on complex geometries.
+
+\textbf{RQ2: Can adaptive sampling via deformable convolutions enhance boundary accuracy versus fixed radial rays?} We propose learning optimal sampling locations (32-256 points) based on local features and shape complexity, dynamically allocating computational resources to irregular boundaries.
+
+\textbf{RQ3: What is the optimal loss formulation balancing accuracy, smoothness, and biological plausibility?} We investigate hybrid losses combining focal loss, smooth L1, shape consistency, boundary smoothness, and prior alignment, determining appropriate weighting schemes.
+
+\section{Potential Datasets}
+
+The DSB2018 nucleus dataset~\cite{caicedo2019nucleus} serves as our primary data source, comprising 670 training and 65 test images with pixel-level instance masks across multiple imaging modalities (brightfield, fluorescence, histology). Nuclei exhibit variable morphologies (10-1000 pixels, circular to elongated shapes, isolated to dense clusters), with challenges including overlapping instances, imaging artifacts, and staining variations. This diversity directly tests our shape-aware approach (\url{https://www.kaggle.com/c/data-science-bowl-2018}). For cross-domain validation, we use MoNuSeg (30 train/14 test images from seven organs) and hDRG microscopy data as out-of-distribution test cases.
+
+\section{Analytical Approach}
+
+\textbf{Architecture.} We employ U-Net~\cite{ronneberger2015unet} with ResNet-34 backbone extracting multi-scale features (1/2, 1/4, 1/8, 1/16 resolutions). Deformable convolutions~\cite{dai2017deformable} in the decoder learn 2D spatial offsets for adaptive receptive fields. The transformer-based shape encoder (3 layers, 8 attention heads) maintains 16 learnable shape prototypes, fusing instance features with prototypes via cross-attention and 2D positional encodings. An adaptive sampling head predicts 32-256 sampling points based on shape complexity. Three parallel heads output object probability (focal loss), radial distances (smooth L1), and complexity scores (regression).
+
+\textbf{Loss Function.} Our hybrid loss combines five components: $\mathcal{L}_{total} = \lambda_1 \mathcal{L}_{focal} + \lambda_2 \mathcal{L}_{dist} + \lambda_3 \mathcal{L}_{shape} + \lambda_4 \mathcal{L}_{smooth} + \lambda_5 \mathcal{L}_{prior}$, where terms handle class imbalance, boundary regression, ray consistency, smoothness, and prototype alignment respectively. Adaptive weighting ($\lambda_i$) optimized via validation.
+
+\textbf{Training.} Data augmentation includes rotations, flips, elastic deformations, brightness/contrast adjustments, and Gaussian noise. Adam optimizer (LR=1e-3, cosine annealing, batch size 16), mixed precision training, progressive training (50 epochs frozen backbone, then 100 epochs end-to-end).
+
+\textbf{Evaluation.} Primary metrics: AP at IoU 0.5, 0.75, and mean 0.5-0.95; instance F1; boundary F1. Results stratified by shape complexity. Qualitative: visual inspection, failure analysis, baseline comparison.
+
+\section{Challenges \& Limitations}
+
+\textbf{Technical Challenges.} The proposed architecture faces several computational and algorithmic challenges. Transformer attention mechanisms scale quadratically with spatial resolution, potentially creating memory bottlenecks for high-resolution images. We will address this through hierarchical attention patterns, limiting attention to local spatial windows, and employing efficient implementations such as FlashAttention that optimize memory access patterns. Training stability presents another concern, as multiple loss components with different numerical scales may cause gradient conflicts or unstable optimization. We plan to employ gradient normalization techniques, adaptive loss weighting via uncertainty estimation~\cite{kendall2018multi}, and systematic hyperparameter tuning to ensure smooth convergence. Learning meaningful shape prototypes requires sufficient morphological diversity in the training data; we will initialize prototypes using clustering analysis on training shapes and enforce diversity regularization to prevent prototype collapse. Finally, post-processing to convert adaptive sampling points into instance masks requires sophisticated polygon reconstruction and watershed algorithms, necessitating careful implementation to maintain computational efficiency during inference.
+
+\textbf{Data Limitations.} While DSB2018 covers multiple imaging modalities, generalization to entirely novel domains such as electron microscopy or live-cell imaging remains uncertain, motivating future work on domain adaptation techniques. Ground truth annotations may contain inconsistencies, particularly along fine boundary regions where manual annotation is subjective; we will perform systematic data quality assessment and potentially exclude low-quality annotations that could mislead training. Class imbalance, where most pixels represent background and nucleus instances vary greatly in size, poses optimization challenges that we address through focal loss and balanced sampling strategies, though residual bias toward larger instances may persist.
+
+\textbf{Interpretability and Validation.} Understanding which learned shape prototypes correspond to recognizable biological morphologies and validating that model predictions are biologically plausible will require domain expertise beyond automated metrics. We will visualize attention maps and learned prototypes, perform systematic ablation studies to understand individual component contributions, and seek feedback from pathologists regarding the biological plausibility of segmentation results. This qualitative validation is essential to ensure that performance gains reflect genuine improvements in capturing biological structure rather than exploitation of dataset artifacts.
+
+\textbf{Ethical Considerations.} Although nucleus segmentation carries lower risk than direct clinical diagnosis, automated analysis tools could propagate systematic biases if training data lacks adequate representation across patient demographics, disease states, or tissue preparation protocols. We acknowledge this limitation and commit to clearly documenting dataset characteristics, model capabilities, and appropriate use cases to prevent misapplication in contexts where the model has not been validated.
+
+\section{Project Timeline}
+
+Given a seven-week timeframe, we adopt an aggressive implementation schedule with parallel development where possible:
+
+\textbf{Week 1: Foundation.} We will complete literature review, establish the development environment, download and preprocess the DSB2018 dataset, and conduct exploratory data analysis to understand morphological distributions. Deliverable: preprocessed dataset with training/validation splits.
+
+\textbf{Week 2: Baseline Implementation.} We implement a baseline U-Net with standard StarDist prediction heads and establish the complete evaluation pipeline including data loaders, metric computation, and visualization tools. Initial training runs will verify that our implementation matches reported baseline performance. Deliverable: functional baseline model achieving AP@0.5 > 0.70.
+
+\textbf{Week 3: Deformable Convolutions.} We develop and integrate the deformable convolution module into the decoder, replacing standard convolutions and conducting ablation studies to verify that adaptive spatial sampling improves boundary accuracy. Deliverable: validated deformable convolution module.
+
+\textbf{Week 4: Shape-Aware Encoder.} We implement the transformer-based shape encoder with learnable prototypes, cross-attention mechanisms, and positional encodings, then integrate it with the existing architecture and verify end-to-end training stability. Deliverable: complete architecture with all proposed components.
+
+\textbf{Week 5: Training and Optimization.} We train the full model with the hybrid loss function, performing hyperparameter tuning for loss weights, learning rate schedules, and augmentation strategies. Extensive training runs aim to achieve target performance (AP@0.5 > 0.75). Deliverable: optimized trained model.
+
+\textbf{Week 6: Evaluation and Analysis.} We conduct comprehensive evaluation on DSB2018 test set and secondary validation datasets, perform ablation studies to quantify individual component contributions, analyze failure cases, and visualize learned shape prototypes and attention patterns. Deliverable: complete experimental results.
+
+\textbf{Week 7: Documentation and Presentation.} We write the final project report synthesizing results, prepare presentation materials, document code for public release, and create usage examples for the research community. Deliverable: final report, presentation, and open-source repository.
+
+\textbf{Risk Mitigation Strategy.} If transformer implementation proves computationally prohibitive, we will substitute CNN-based attention mechanisms while preserving the core adaptive sampling approach. If shape prototype learning shows minimal benefit in early experiments, we will simplify to a pure deformable convolution approach, ensuring a functional system within the timeline. The modular architecture design allows component-level adjustments without requiring complete reimplementation.
+
+\section{Expected Impact}
+
+This project will contribute to both machine learning methodology and biomedical image analysis. By demonstrating that geometric reasoning through transformers and adaptive representations can significantly improve instance segmentation, we advance the state-of-the-art in computer vision. For biomedical applications, improved nucleus segmentation enables more accurate quantitative pathology, potentially accelerating diagnostic workflows and biological discovery. The open-source release of our code and trained models will benefit the broader research community working on microscopy image analysis.
+
+\bibliographystyle{ACM-Reference-Format}
+\begin{thebibliography}{10}
+
+\bibitem{schmidt2018cell}
+U.~Schmidt, M.~Weigert, C.~Broaddus, and G.~Myers.
+\newblock Cell detection with star-convex polygons.
+\newblock In {\em International Conference on Medical Image Computing and Computer-Assisted Intervention (MICCAI)}, pages 265--273, 2018.
+
+\bibitem{caicedo2019nucleus}
+J.~C. Caicedo, A.~Goodman, K.~W. Karhohs, B.~A. Cimini, J.~Ackerman, M.~Haghighi, C.~Heng, T.~Becker, M.~Doan, C.~McQuin, et al.
+\newblock Nucleus segmentation across imaging experiments: the 2018 data science bowl.
+\newblock {\em Nature Methods}, 16(12):1247--1253, 2019.
+
+\bibitem{he2017mask}
+K.~He, G.~Gkioxari, P.~Doll{\'a}r, and R.~Girshick.
+\newblock Mask r-cnn.
+\newblock In {\em IEEE International Conference on Computer Vision (ICCV)}, pages 2961--2969, 2017.
+
+\bibitem{ronneberger2015unet}
+O.~Ronneberger, P.~Fischer, and T.~Brox.
+\newblock U-net: Convolutional networks for biomedical image segmentation.
+\newblock In {\em International Conference on Medical Image Computing and Computer-Assisted Intervention (MICCAI)}, pages 234--241, 2015.
+
+\bibitem{dai2017deformable}
+J.~Dai, H.~Qi, Y.~Xiong, Y.~Li, G.~Zhang, H.~Hu, and Y.~Wei.
+\newblock Deformable convolutional networks.
+\newblock In {\em IEEE International Conference on Computer Vision (ICCV)}, pages 764--773, 2017.
+
+\bibitem{kendall2018multi}
+A.~Kendall, Y.~Gal, and R.~Cipolla.
+\newblock Multi-task learning using uncertainty to weigh losses for scene geometry and semantics.
+\newblock In {\em IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, pages 7482--7491, 2018.
+
+\bibitem{vaswani2017attention}
+A.~Vaswani, N.~Shazeer, N.~Parmar, J.~Uszkoreit, L.~Jones, A.~N. Gomez, {\L}.~Kaiser, and I.~Polosukhin.
+\newblock Attention is all you need.
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)}, pages 5998--6008, 2017.
+
+\bibitem{weigert2020star}
+M.~Weigert, U.~Schmidt, R.~Haase, K.~Sugawara, and G.~Myers.
+\newblock Star-convex polyhedra for 3d object detection and segmentation in microscopy.
+\newblock In {\em IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)}, pages 3666--3673, 2020.
+
+\bibitem{stringer2021cellpose}
+C.~Stringer, T.~Wang, M.~Michaelos, and M.~Pachitariu.
+\newblock Cellpose: a generalist algorithm for cellular segmentation.
+\newblock {\em Nature Methods}, 18(1):100--106, 2021.
+
+\bibitem{graham2019hover}
+S.~Graham, Q.~D. Vu, S.~E.~A. Raza, A.~Azam, Y.~W. Tsang, J.~T. Kwak, and N.~Rajpoot.
+\newblock Hover-net: Simultaneous segmentation and classification of nuclei in multi-tissue histology images.
+\newblock {\em Medical Image Analysis}, 58:101563, 2019.
+
+\end{thebibliography}
+
+\end{document}
+
