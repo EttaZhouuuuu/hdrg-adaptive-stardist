@@ -97,3 +97,11 @@ Thumbs.db
 *.tmp
 *.bak
 *.cache
+
+# Experiment results (regeneratable)
+*.txt
+*.log
+*.log.*
+
+# Visualizations and figures (regeneratable)
+vis/
