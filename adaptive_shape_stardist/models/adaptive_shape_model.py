@@ -81,6 +81,10 @@ class AdaptiveShapeConfig:
         train_epochs=100,
         train_steps_per_epoch=100,
         train_batch_size=4,
+        # Regularization
+        weight_decay=1e-5,
+        dropout_rate=0.3,
+        label_smoothing=0.1,
         **kwargs
     ):
         # Model architecture
@@ -110,6 +114,11 @@ class AdaptiveShapeConfig:
         self.train_epochs = train_epochs
         self.train_steps_per_epoch = train_steps_per_epoch
         self.train_batch_size = train_batch_size
+        
+        # Regularization settings
+        self.weight_decay = weight_decay
+        self.dropout_rate = dropout_rate
+        self.label_smoothing = label_smoothing
         
         # Additional kwargs
         for key, value in kwargs.items():
@@ -215,17 +224,23 @@ class AdaptiveShapeStarDist(keras.Model):
     def _build_output_heads(self):
         """Build single-scale output prediction heads"""
         
+        dropout_rate = getattr(self.config, 'dropout_rate', 0.3)
+        
         # Instance probability head
         self.prob_head = keras.Sequential([
             layers.Conv2D(128, 3, padding='same', activation='relu'),
+            layers.Dropout(dropout_rate),
             layers.Conv2D(64, 3, padding='same', activation='relu'),
+            layers.Dropout(dropout_rate),
             layers.Conv2D(1, 1, activation='sigmoid'),
         ], name='prob_head')
         
         # Distance/boundary head (predicts radii at sampling points)
         self.dist_head = keras.Sequential([
             layers.Conv2D(128, 3, padding='same', activation='relu'),
+            layers.Dropout(dropout_rate),
             layers.Conv2D(64, 3, padding='same', activation='relu'),
+            layers.Dropout(dropout_rate),
             layers.Conv2D(self.config.max_sampling_points, 1, activation='relu'),
         ], name='dist_head')
         
@@ -233,11 +248,14 @@ class AdaptiveShapeStarDist(keras.Model):
         self.complexity_head = keras.Sequential([
             layers.GlobalAveragePooling2D(),
             layers.Dense(64, activation='relu'),
+            layers.Dropout(dropout_rate),
             layers.Dense(1, activation='sigmoid'),
         ], name='complexity_head')
     
     def _build_multiscale_heads(self):
         """Build multi-scale output prediction heads for FPN"""
+        
+        dropout_rate = getattr(self.config, 'dropout_rate', 0.3)
         
         # Create separate heads for each FPN level
         self.prob_heads = {}
@@ -247,14 +265,18 @@ class AdaptiveShapeStarDist(keras.Model):
             # Probability head for this level
             self.prob_heads[level] = keras.Sequential([
                 layers.Conv2D(128, 3, padding='same', activation='relu'),
+                layers.Dropout(dropout_rate),
                 layers.Conv2D(64, 3, padding='same', activation='relu'),
+                layers.Dropout(dropout_rate),
                 layers.Conv2D(1, 1, activation='sigmoid'),
             ], name=f'prob_head_{level}')
             
             # Distance head for this level
             self.dist_heads[level] = keras.Sequential([
                 layers.Conv2D(128, 3, padding='same', activation='relu'),
+                layers.Dropout(dropout_rate),
                 layers.Conv2D(64, 3, padding='same', activation='relu'),
+                layers.Dropout(dropout_rate),
                 layers.Conv2D(self.config.max_sampling_points, 1, activation='relu'),
             ], name=f'dist_head_{level}')
         
@@ -262,6 +284,7 @@ class AdaptiveShapeStarDist(keras.Model):
         self.complexity_head = keras.Sequential([
             layers.GlobalAveragePooling2D(),
             layers.Dense(64, activation='relu'),
+            layers.Dropout(dropout_rate),
             layers.Dense(1, activation='sigmoid'),
         ], name='complexity_head')
     
@@ -360,18 +383,27 @@ class AdaptiveShapeStarDist(keras.Model):
         
         if self.config.multiscale_prediction:
             # Multi-scale predictions: predict at each FPN level
+            # Apply shape prior encoding to all scales at once (multi-scale processing)
+            if self.shape_prior_encoder is not None:
+                prior_output = self.shape_prior_encoder(
+                    {'fpn_features': fpn_features},
+                    training=training
+                )
+                # Use multi-scale prior features
+                prior_multiscale = prior_output.get('multiscale_prior_features', {})
+                prototype_weights = prior_output['prototype_weights']
+            else:
+                prior_multiscale = {}
+                prototype_weights = None
+            
             multiscale_predictions = {}
             
             for level in self.config.fpn_levels:
                 features = fpn_features[level]
                 
-                # Apply shape prior encoding (if enabled)
-                if self.shape_prior_encoder is not None:
-                    prior_output = self.shape_prior_encoder(
-                        {'features': features},
-                        training=training
-                    )
-                    features = prior_output['prior_features']
+                # Use prior features if available, otherwise use original features
+                if level in prior_multiscale:
+                    features = prior_multiscale[level]
                 
                 # Predict at this scale
                 prob = self.prob_heads[level](features, training=training)
@@ -391,6 +423,14 @@ class AdaptiveShapeStarDist(keras.Model):
                 'fpn_features': fpn_features,
             }
             
+            if prototype_weights is not None:
+                output['prototype_weights'] = prototype_weights
+            
+            # Include learned prototypes for analysis
+            if self.shape_prior_encoder is not None:
+                output['learned_prototypes'] = prior_output.get('learned_prototypes')
+                output['attention_maps'] = prior_output.get('attention_maps')
+        
         else:
             # Single-scale prediction: use only p2 (highest resolution)
             features = fpn_features['p2']
@@ -434,6 +474,11 @@ class AdaptiveShapeStarDist(keras.Model):
             
             if prototype_weights is not None:
                 output['prototype_weights'] = prototype_weights
+            
+            # Include learned prototypes for analysis
+            if self.shape_prior_encoder is not None:
+                output['learned_prototypes'] = prior_output.get('learned_prototypes')
+                output['attention_maps'] = prior_output.get('attention_maps')
         
         return output
     
@@ -555,7 +600,7 @@ class AdaptiveShapeStarDist(keras.Model):
         path.mkdir(parents=True, exist_ok=True)
         
         # Save weights
-        self.save_weights(str(path / 'model_weights.h5'))
+        self.save_weights(str(path / 'model_weights.weights.h5'))
         
         # Save config
         import json
@@ -585,7 +630,7 @@ class AdaptiveShapeStarDist(keras.Model):
         _ = model(dummy_input, training=False)
         
         # Load weights
-        model.load_weights(str(path / 'model_weights.h5'))
+        model.load_weights(str(path / 'model_weights.weights.h5'))
         
         print(f"Model loaded from {path}")
         

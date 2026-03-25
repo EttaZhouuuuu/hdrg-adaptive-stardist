@@ -123,12 +123,21 @@ class UNetBackbone(keras.Model):
             # Skip connection from encoder
             skip_features = encoder_features[-(i + 2)]
             
-            # Crop skip features if needed to match size
+            # Crop skip features if needed to match size (graph-compatible)
             target_shape = tf.shape(x)[1:3]
             skip_shape = tf.shape(skip_features)[1:3]
             
-            if skip_shape[0] != target_shape[0] or skip_shape[1] != target_shape[1]:
-                skip_features = tf.image.resize(skip_features, target_shape)
+            # Use tf.cond for conditional resize (graph-compatible)
+            needs_resize = tf.logical_or(
+                tf.not_equal(skip_shape[0], target_shape[0]),
+                tf.not_equal(skip_shape[1], target_shape[1])
+            )
+            
+            skip_features = tf.cond(
+                needs_resize,
+                lambda: tf.image.resize(skip_features, target_shape),
+                lambda: skip_features
+            )
             
             # Concatenate
             x = tf.concat([x, skip_features], axis=-1)

@@ -1,0 +1,99 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Model weights and checkpoints (too large for git)
+*.pth
+*.pt
+*.pkl
+*.ckpt
+*.h5
+*.onnx
+
+# Data directories
+*.zarr/
+*.h5ad/
+*.h5
+*.n5
+*.tif
+*.tiff
+*.ome.tif
+*.ome.tiff
+
+# Training outputs
+*.log
+*.log.*
+
+# NPZ data files (training data)
+*.npz
+
+# Results directories
+inference_results/
+performance_analysis/
+models/
+models_complete/
+models_pytorch/
+models_xenium_full/
+models_xenium_gpu/
+test_results/
+evaluation_results/
+
+# Images and figures (can be regenerated)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.pdf
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Cursor IDE
+.cursor/
+
+# Temporary files
+*.tmp
+*.bak
+*.cache

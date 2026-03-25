@@ -28,6 +28,14 @@ else:
         'tqdm>=4.62.0',
     ]
 
+# Get package directory
+package_dir = Path(__file__).parent
+package_dir_name = package_dir.name
+
+# Find packages including the top-level adaptive_shape_stardist package
+packages = ['adaptive_shape_stardist']
+packages.extend(['adaptive_shape_stardist.' + p for p in find_packages(str(package_dir))])
+
 setup(
     name='adaptive-shape-stardist',
     version='0.1.0',
@@ -37,7 +45,8 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/yourusername/adaptive-shape-stardist',
-    packages=find_packages(),
+    packages=packages,
+    package_dir={'': package_dir_name},
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Science/Research',

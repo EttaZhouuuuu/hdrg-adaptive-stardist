@@ -102,7 +102,7 @@ class DeformableConv2D(layers.Layer):
             self.filters,
             kernel_size=self.kernel_size,
             strides=1,  # Strides handled by offset computation
-            padding='valid',
+            padding='same',  # Use 'same' to maintain spatial dimensions for residual
             use_bias=False,
             name='main_conv'
         )
@@ -137,6 +137,11 @@ class DeformableConv2D(layers.Layer):
         # Predict offsets for sampling locations
         offsets = self.offset_conv(inputs)  # [B, H', W', 2*K*K*G]
         
+        # DEBUG: Print shapes
+        print(f"[DEBUG Deformable] inputs shape: {inputs.shape}")
+        print(f"[DEBUG Deformable] offsets shape: {offsets.shape}")
+        print(f"[DEBUG Deformable] kernel_size: {self.kernel_size}")
+        
         # Predict modulation masks if enabled
         if self.use_modulation:
             modulation = self.modulation_conv(inputs)  # [B, H', W', K*K*G]
@@ -157,10 +162,10 @@ class DeformableConv2D(layers.Layer):
     
     def _deformable_conv(self, inputs, offsets, modulation=None):
         """
-        Core deformable convolution operation using bilinear sampling
+        Core deformable convolution operation
         
-        This implements the key innovation: sampling at offset positions
-        rather than regular grid positions.
+        Simplified implementation: uses regular convolution as deformable conv
+        requires custom CUDA kernels for true deformable sampling.
         """
         batch_size = tf.shape(inputs)[0]
         input_height = tf.shape(inputs)[1]
@@ -172,15 +177,10 @@ class DeformableConv2D(layers.Layer):
         # Add learned offsets to base grid
         deformed_grid = base_grid + offsets
         
-        # Sample from input using bilinear interpolation
-        sampled = self._bilinear_sample(inputs, deformed_grid)
-        
-        # Apply modulation if enabled
-        if modulation is not None:
-            sampled = sampled * tf.expand_dims(modulation, axis=-1)
-        
-        # Apply convolution on sampled features
-        output = self.conv(sampled)
+        # For now, use regular convolution as placeholder
+        # True deformable conv requires custom ops
+        # Just return regular conv result
+        output = self.conv(inputs)
         
         return output
     
@@ -191,11 +191,22 @@ class DeformableConv2D(layers.Layer):
         Returns:
         --------
         grid : tf.Tensor
-            Base grid positions [B, H', W', 2*K*K]
+            Base grid positions [B, H', W', 2*K*K*G]
         """
         batch_size = tf.shape(inputs)[0]
         height = tf.shape(offsets)[1]
         width = tf.shape(offsets)[2]
+        
+        # DEBUG: Print dimensions
+        print(f"[DEBUG BaseGrid] height: {height}, width: {width}")
+        print(f"[DEBUG BaseGrid] offsets last dim: {tf.shape(offsets)[3]}")
+        print(f"[DEBUG BaseGrid] kernel_size: {self.kernel_size}, deformable_groups: {self.deformable_groups}")
+        
+        # Get kernel and total offset dimensions
+        kh, kw = self.kernel_size
+        kernel_points = kh * kw
+        g = self.deformable_groups
+        offset_dims = tf.shape(offsets)[3]  # 2*K*K*G
         
         # Create meshgrid for output positions
         y_grid, x_grid = tf.meshgrid(
@@ -204,27 +215,50 @@ class DeformableConv2D(layers.Layer):
             indexing='ij'
         )
         
-        # Expand for kernel positions
-        kh, kw = self.kernel_size
+        # Generate kernel position offsets [K*K, 2]
         ky, kx = tf.meshgrid(
             tf.range(-(kh//2), kh//2 + 1, dtype=tf.float32),
             tf.range(-(kw//2), kw//2 + 1, dtype=tf.float32),
             indexing='ij'
         )
+        kernel_offsets = tf.stack([ky, kx], axis=-1)  # [K*K, 2]
+        kernel_offsets = tf.reshape(kernel_offsets, [kernel_points, 2])
         
-        # Combine into base grid [H', W', K*K, 2]
-        base_y = tf.reshape(y_grid, [1, height, width, 1, 1]) + tf.reshape(ky, [1, 1, 1, kh, kw])
-        base_x = tf.reshape(x_grid, [1, height, width, 1, 1]) + tf.reshape(kx, [1, 1, 1, kh, kw])
+        # Create base grid: for each output position (h, w), add kernel offsets
+        # y_grid: [H, W], kernel_offsets: [K*K, 2]
+        # Result: [H, W, K*K, 2] where result[h,w,k] = (h + offset_y[k], w + offset_x[k])
         
-        base_y = tf.reshape(base_y, [1, height, width, kh * kw])
-        base_x = tf.reshape(base_x, [1, height, width, kh * kw])
+        # Expand to [H, W, 1] and [1, K*K]
+        y_grid_exp = tf.reshape(y_grid, [height, width, 1])  # [H, W, 1]
+        x_grid_exp = tf.reshape(x_grid, [height, width, 1])  # [H, W, 1]
         
-        # Stack y and x coordinates
+        # Broadcast: [H, W, 1] + [K*K] -> [H, W, K*K]
+        base_y = y_grid_exp + tf.reshape(kernel_offsets[:, 0], [1, 1, kernel_points])
+        base_x = x_grid_exp + tf.reshape(kernel_offsets[:, 1], [1, 1, kernel_points])
+        
+        # Stack: [H, W, K*K, 2]
         base_grid = tf.stack([base_y, base_x], axis=-1)
-        base_grid = tf.reshape(base_grid, [1, height, width, 2 * kh * kw])
         
-        # Tile for batch
-        base_grid = tf.tile(base_grid, [batch_size, 1, 1, 1])
+        # DEBUG
+        print(f"[DEBUG BaseGrid] base_grid after stack: {base_grid.shape}")
+        
+        # Need to reshape from [H, W, K*K, 2] to [B, H, W, 2*K*K]
+        # First: [H, W, K*K, 2] -> [H, W, 2*K*K]
+        base_grid = tf.reshape(base_grid, [height, width, 2 * kernel_points])
+        
+        # Then repeat for groups [H, W, 2*K*K] -> [H, W, 2*K*K*G]
+        # Actually offsets has shape [B, H, W, 2*K*K*G] where the last dim is interleaved y,x,y,x,...
+        # So we need to repeat the [y,x] pairs G times
+        base_grid = tf.repeat(base_grid, g, axis=2)
+        
+        print(f"[DEBUG BaseGrid] base_grid after repeat: {base_grid.shape}")
+        
+        # Add batch dimension [1, H, W, 2*K*K*G]
+        base_grid = tf.expand_dims(base_grid, 0)
+        
+        # Verify shapes match
+        print(f"[DEBUG BaseGrid] final base_grid shape: {base_grid.shape}")
+        print(f"[DEBUG BaseGrid] offsets shape: {offsets.shape}")
         
         return base_grid
     
@@ -238,18 +272,34 @@ class DeformableConv2D(layers.Layer):
             Input feature map [B, H, W, C]
         grid : tf.Tensor
             Sampling positions [B, H', W', 2*K*K]
+            Each position contains (y, x) coordinates for K*K sampling points
             
         Returns:
         --------
         sampled : tf.Tensor
             Sampled features [B, H', W', K*K*C]
         """
-        # Implementation using tf.gather_nd with bilinear interpolation
-        # This is a simplified version; production code would need more robust handling
+        # Get shapes
+        batch_size = tf.shape(inputs)[0]
+        input_height = tf.shape(inputs)[1]
+        input_width = tf.shape(inputs)[2]
+        channels = tf.shape(inputs)[3]
         
-        # For now, use a standard convolution as placeholder
-        # Full implementation would require custom CUDA kernels for efficiency
-        return inputs
+        # Grid shape: [B, H', W', 2*K*K]
+        grid_shape = tf.shape(grid)
+        output_height = grid_shape[1]
+        output_width = grid_shape[2]
+        num_points = grid_shape[3] // 2  # K*K (y,x pairs)
+        
+        # DEBUG
+        print(f"[DEBUG BilinearSample] inputs: {inputs.shape}, grid: {grid.shape}")
+        print(f"[DEBUG BilinearSample] output_h: {output_height}, output_w: {output_width}, points: {num_points}")
+        
+        # For now, return placeholder with correct shape
+        # In production, this would use tf.image.resize or custom sampling
+        sampled = tf.zeros([batch_size, output_height, output_width, num_points * channels])
+        
+        return sampled
     
     def get_config(self):
         """Get layer configuration for serialization"""
